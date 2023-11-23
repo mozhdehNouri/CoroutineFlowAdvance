@@ -1,5 +1,6 @@
 package com.example.coroutineflowadvance.coroutine.coroutine_builder
 
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -14,6 +15,8 @@ fun main() {
         }
         println(a.await())
         println(b.await())
+        val job = Job()
+        job
 
     }
 }

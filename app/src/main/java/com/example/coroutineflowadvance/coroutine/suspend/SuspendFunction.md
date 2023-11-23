@@ -1,5 +1,10 @@
 ## suspend function
 
+suspen function is a function that is marked with`suspend`modifier. It may*suspend*execution of the
+code without blocking the current thread of execution by invoking other suspending functions. A
+suspending function cannot be invoked from a regular code, but only from other suspending functions
+and from suspending lambdas
+
 you can imagin suspend function like a computre game, when you play a game after a while maybe you
 need to do some work and you pause your game after a while when you coma back to your game you
 wouldn't start it from beging you continue it from pause point and suspend function do same for you.
