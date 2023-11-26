@@ -1,12 +1,15 @@
 package com.example.coroutineflowadvance.flow.terminal_operator
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.lastOrNull
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.toSet
 import kotlinx.coroutines.runBlocking
+import kotlin.coroutines.EmptyCoroutineContext
 
 private fun main() {
     val flowOne = flow<String> {
@@ -49,4 +52,9 @@ fun main(args: Array<String>) {
         val set = flowOne.toSet()
     }
 
+    // use launchIn to change coroutineScope of your flow
+    // for example you can use viewModelScope is you are in viewModel
+    // internally launchIn function use collection function it means you no longer need to call collect function
+    val scope = CoroutineScope(EmptyCoroutineContext)
+    flowOne.launchIn(scope)
 }
