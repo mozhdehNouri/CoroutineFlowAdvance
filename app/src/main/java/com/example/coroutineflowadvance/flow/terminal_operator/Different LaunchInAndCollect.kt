@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.coroutines.EmptyCoroutineContext
-
 private fun main() {
     val flowOne = flow<String> {
         emit("first emit of flow One")

@@ -69,6 +69,17 @@ the flow untli is come
 now you can take look at LaunchAndCollect.kt to have better understanding
 of different
 
+all terminal operators are suspend function except one and this **is launchIn()**
 
+```kt
+fun <T> Flow<T>.launchIn(scope: CoroutineScope): Job
+```
+
+as you can see launchIn can not provide a lambda to perform your operation and you can pass a scope
+to it .
+
+launcIn is not suspend function it means it can suspend the operation
+but collect function is a suspend function and can suspend the operation without blocking. but it is
+true?? i have research about it.
 
 
