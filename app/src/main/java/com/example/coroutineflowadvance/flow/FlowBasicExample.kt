@@ -8,7 +8,6 @@ fun main() {
     //print single vale
     println(addNumber(listOf(1, 2, 3, 4, 5)))
 
-
     // print multiple value sync with sequence
     val numWithSeq = addNumberWithSequence(listOf(1, 2, 3, 4, 5))
     println(numWithSeq.forEach {
@@ -16,7 +15,7 @@ fun main() {
     })
 
 
-// print multiple value sync with flow
+    // print multiple value async with flow
     val numWithFlow = addNumberWithFlow(listOf(1, 2, 3, 4, 5))
     runBlocking {
         numWithFlow.collect {

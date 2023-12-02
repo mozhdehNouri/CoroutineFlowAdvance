@@ -1,32 +1,30 @@
 package com.example.coroutineflowadvance.flow.flowBuilder
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.example.coroutineflowadvance.ui.logWithTimestamp
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
+@RequiresApi(Build.VERSION_CODES.O)
 suspend fun main() {
-
-    // use flowOf for create a flow
-    val flowOne = flowOf<String>("a", "b", "c", "d", "")
-
-//       flowOne.collect {
-//        println("flowOf:  $it")
-//    }
-
-    // use flowOf for create a flow
-    listOf("1", "2", "3", "4", "5").asFlow().collect {
-//        println("asFlow:  $it")
-    }
-
-    // use flow{} builder do not forget use emit function to emit value
+    // use flow{} this builder is much more flexible
+    // it dosn't use emit function internally and you can use emit() function and emit each value
+    // you want
+    // you have a suspendable block and you can call coroutine function inside this block
     flow {
-        kotlinx.coroutines.delay(1000)
-        emit("first value")   //
-        emitAll(flowOne)
+        emit("first value")
+        emitAll(flowOf("hi", "bye"))
+        delay(1000)
         emit("second value ")
         emitAll(listOf<Int>(1, 2, 3, 7).asFlow())
+        emit(15.5)
     }.collect {
-        println(it)
+        println("flow{}: $it :time:${logWithTimestamp()}")
     }
 }
+
+
