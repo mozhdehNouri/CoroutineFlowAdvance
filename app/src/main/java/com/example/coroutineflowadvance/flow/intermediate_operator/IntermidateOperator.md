@@ -1,14 +1,22 @@
 Intermidate operator:
 
-this intermidate operator*Intermediate operators*on the flow such as map, filter, take, zip, etc are
-functions that are applied to the*upstream*flow or flows and return a*downstream*flow where further
-operators can be applied to. Intermediate operations do not execute any code in the flow and are not
+Intermidate operator unlike terminal operator perform instructions and
+produces a new flow.
+
+*Intermediate operators* on the flow such as map, filter, take, zip, etc
+are
+functions that are applied to the*upstream*flow or flows and return a
+*downstream*flow where further
+operators can be applied to. Intermediate operations do not execute any
+code in the flow and are not
 suspending functions themselves.
 
-we can say with terminal operator we can apply our emision on flow and return new and transformed
+we can say with terminal operator we can apply our emision on flow and
+return new and transformed
 flow.
 
-instead of terminal operator except launchIn and asLiveData() are suspend function
+instead of terminal operator except launchIn and asLiveData() are suspend
+function
 the intermidate operator not suspend function.
 
 the intermidate operator aren't suspend function but most of them get a lambda which perform
@@ -81,12 +89,14 @@ flowOne.transform {
     emit(it)  // 1,2,3,4
   emit(it*2) //  1,4,6,8 
 }
-
-
 ```
 
 withIndext :  we can get value with index
 
-distinctUntilChanged()   :  for example of we have number like this 1,1,2,5,8,1 the output is
-1,2,5,8,1 it can filter the flow next each other // but why ? why it can't filter all 1 for
+distinctUntilChanged()   :  for example of we have number like this
+1,1,2,5,8,1 the output is
+1,2,5,8,1 it can filter the flow next each other // but why ? why it can't
+filter all 1 for
 example ? we need to use set ?
+
+we can call suspend function in intermediate block of code.

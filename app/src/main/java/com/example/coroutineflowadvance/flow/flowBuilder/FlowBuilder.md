@@ -28,11 +28,35 @@ function into flow{} block.
 ##### flow{} builder :
 
 as you konw we must use emit function in flow builder for emit next value
-now we have diffrent type of emit function and you have konw use which one in you use case
+now we have diffrent type of emit function and you have konw use which one
+in you use case
 
 1- emit()    **to emit value**
 
-2- emitAll()  to emit all the values from`Channel`or`Flow`(`emitAll(flow)`  or we can say emits an
-entire flow instead of doing it one by one. `emitAll(s)` is the same as`flow.collect { emit(it) }`
+2- emitAll()  to emit all the values from`Channel`or`Flow`(`emitAll(flow)`
+or we can say emits an
+entire flow instead of doing it one by one. `emitAll(s)` is the same
+as `flow.collect { emit(it) }`
 
-For more information check the code related to this part
+For instance, consider this example:
+
+```kt
+fruitsList = listOf("apple", "banana", "Mango", "Orange")
+flow {
+emit(fruitsList)
+emitAll(fruitsList)
+}.onEach {}.collect()
+```
+
+Output :
+
+```kt
+kotlinx.coroutines.flow.FlowKt__BuildersKt$asFlow$$inlined$unsafeFlow$3@383c57de \ 12:36:04
+apple \ 12:36:04
+banana \ 12:36:04
+Mango \ 12:36:04
+Orange \ 12:36:04
+```
+
+as you can see the first emit() can not emit a flow but the second one is
+designed for emit flow.

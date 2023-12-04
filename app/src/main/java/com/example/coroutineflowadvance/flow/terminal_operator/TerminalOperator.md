@@ -1,8 +1,11 @@
 #### Terminal operator
 
-To call a flow and get data we need to use the terminal operator
+Terminal operators are functions to consume values emitted by the flow.
 
-for example
+or we can say for start giving value form flow we should use a terminal
+operator and after that flow start emit value for us.
+
+for example :
 
 ```kt
 val flowOne = flow {
@@ -12,18 +15,104 @@ val flowOne = flow {
 }
 ```
 
-above example when we run application nothing happend, we need to call a
-terminal operator on flow
-like, collect to start emitting value.
-Flow is a coldStream it means start to send data when you call it.
+above example when we run application nothing happens, we need to call a
+a terminal operator on flow, like **collect**. Because Flow is a
+Coldstream when calling terminal function flow starts to emit data.
 
-as you konw for call a flow we need a terminal operator called collect
+All terminal operators are suspend it means you must call it in coroutine
+scope except **launchIn()** and **asLiveData()**.
 
-0- collect function emit all value with out any condition
+###### 1- Collect  :
+
+Collecting plays the main role of starting to emit data from the flow.
+all terminal functions use collect function internally like toSet,toList
+
+The return type of collect operator is unit.
+
+We have different types of collect functions:
+
+##### a. collect {} :
+
+This form allows you to provide a block of code inside the `collect`
+function.
+
+The block of code is executed for each emitted value, allowing you to
+perform specific actions or operations for each value. It's a more concise
+way of expressing what to do with each emitted value. **collect{}** is
+often preferred when you want to perform specific actions or operations
+for each emitted value because it results in cleaner and more readable
+code.
+
+for instance :
+
+```kt
+flowOne.collect{
+     // Do something with the value
+}
+```
+
+#### b. collect():
+
+Terminal flow operator that collects the given flow but ignores all
+emitted values.
+
+It's used when you just want to consume the values emitted by the flow
+without doing anything special for each value.
+This operator is usually used with [onEach], [onCompletion] and [catch]
+operators to process all emitted values and handle an exception that might
+occur in the upstream flow or during processing.
+
+collect function is suspend function and if you call several collect
+operator that perform sequential.
+
+for instance :
+
+```kt
+private suspend fun main() {
+    val fruitsList =
+        listOf<String>("apple", "banana", "Mango", "Orange").asFlow()
+    val flowOne = flow {
+        emit("start collecting")
+        kotlinx.coroutines.delay(2000)
+        emitAll(fruitsList)
+        kotlinx.coroutines.delay(2000)
+        emit("end of collecting")
+    }.onEach {
+        println("$it \\ ${logWithTimestamp()}")
+    }
+    flowOne.collect()
+
+    fruitsList.onEach {
+        delay(2000)
+        println("$it \\ ${logWithTimestamp()}")
+    }.collect()
+}
+```
+
+output is :
+
+```kt
+start collecting \ 12:51:14
+apple \ 12:51:16
+banana \ 12:51:16
+Mango \ 12:51:16
+Orange \ 12:51:16
+end of collecting \ 12:51:18
+apple \ 12:51:20
+banana \ 12:51:22
+Mango \ 12:51:24
+Orange \ 12:51:26
+```
+
+First flowOne started to collect and after that when flowOne got completed
+fruitsList started to collect.
+
+#### c. collectLatest{} :
 
 now we have some terminal operators they internally called collect like:
 
-1- first()  return first element if the element was null we get an execption to pervent the
+1- first()  return first element if the element was null we get an
+execption to pervent the
 execption we need call firstOrNull()  also have first{} that return the
 first element which match
 with condition
@@ -81,5 +170,3 @@ to it .
 launcIn is not suspend function it means it can suspend the operation
 but collect function is a suspend function and can suspend the operation without blocking. but it is
 true?? i have research about it.
-
-

@@ -1,6 +1,8 @@
 package com.example.coroutineflowadvance.flow.terminal_operator
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
@@ -49,7 +51,17 @@ fun main(args: Array<String>) {
 
     //toSet operator use internally collect function
     runBlocking {
-        val set = flowOne.toSet()
+        flowOne.toSet()
+
+
+        flowOne.collect {
+
+        }
+        flowOne.collect()
+
+        flowOne.collectLatest {
+
+        }
     }
 
     // use launchIn to change coroutineScope of your flow
