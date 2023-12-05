@@ -1,8 +1,11 @@
 #### Terminal operator
 
+note: all operators we use in this article are terminal operators. but I
+divide it into different categories for better understanding.
+
 Terminal operators are functions to consume values emitted by the flow.
 
-or we can say for start giving value form flow we should use a terminal
+or we can say to start giving value from flow we should use a terminal
 operator and after that flow start emit value for us.
 
 for example :
@@ -109,30 +112,57 @@ fruitsList started to collect.
 
 #### c. collectLatest{} :
 
-now we have some terminal operators they internally called collect like:
+###### 2- Collection:
 
-1- first()  return first element if the element was null we get an
-execption to pervent the
-execption we need call firstOrNull()  also have first{} that return the
-first element which match
-with condition
+The second category is collection. we have some flow terminal operator
+that use the collect function internally which means you no longer need to
+call collection function and convert flow to list or set ...
 
-2 - last return last parameter if the last element was null we get
-exception so for prevent we need
-to use lastOrNull
+a. toSet()         // convert a flow into a set and use collection
+function internally
 
-3 - toList() that transform a flow to list and internally use collection
-function
+b. toList()       // convert a flow into a list
 
-4 - toSet() that transform a flow to set and internally use collection
-function
+// what happend to toList() or toSet() can observe the changes? so why we
+use collect function?
+
+##### 3- Reduce
+
+All this operator use collect operator internally
+
+a. **first()**  return the first element if the element was null we get an
+exception to prevent the exception we need call **firstOrNull()**  also we
+have **first{}** operator which return the first element that match with
+condition.
+
+or we can say first() that returns the first element emitted by the flow
+and then cancels flow's collection. Throws [NoSuchElementException] if the
+flow was empty.
+
+**first{}** :The terminal operator that returns the first element emitted
+by the flow matching the given [predicate] and then cancels flow's
+collection. Throws [NoSuchElementException] if the flow has not contained
+elements matching the [predicate].
+
+**firstOrNull()** :  The terminal operator that returns the first element
+emitted by the flow and then cancels flow's collection. Returns `null` if
+the flow was empty.
+
+**firstOrNull{}** :  The terminal operator that returns the first element
+emitted by the flow matching the given [predicate] and then cancels flow's
+collection. Returns `null` if the flow did not contain an element matching
+the [predicate].
+
+2 - **last()** return last parameter if the last element was null we get
+exception so for prevent we need to use **lastOrNull()**
 
 5- launchIn() this function not suspend function like toList or toSet
 
 ```kt
-public fun <T> Flow<T>.launchIn(scope: CoroutineScope): Job = scope.launch {
-    collect() // tail-call
-}
+public fun <T> Flow<T>.launchIn(scope: CoroutineScope): Job =
+    scope.launch {
+        collect() // tail-call
+    }
 ```
 
 actually launchIn is a shortcut , instead Of using
