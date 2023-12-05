@@ -49,7 +49,7 @@ code.
 for instance :
 
 ```kt
-flowOne.collect{
+flowOne.collect {
      // Do something with the value
 }
 ```
@@ -66,7 +66,7 @@ operators to process all emitted values and handle an exception that might
 occur in the upstream flow or during processing.
 
 collect function is suspend function and if you call several collect
-operator that perform sequential.
+operator that performs sequentially.
 
 for instance :
 
@@ -111,6 +111,190 @@ First flowOne started to collect and after that when flowOne got completed
 fruitsList started to collect.
 
 #### c. collectLatest{} :
+
+collect the latest value. if a value is processing and new value is coming
+the previous value get cancel and new value get emit.
+
+##### compare all collect function:
+
+##### collect() : It is a shorthand for collect {}
+
+- **Description:** The `collect` function is a terminal operator that
+  starts the collection of values from the Flow. It is a suspending
+  function, meaning it can only be called from within a coroutine.
+- **Behavior:**
+    - The `collect` function collects all emitted values from the Flow
+      sequentially, one by one.
+    - It suspends the coroutine until a new value is emitted.
+
+This operator is usually used with **onEach**, **onCompletion **and *
+*catch** operators to process all emitted values and handle an exception
+that might occur in the upstream flow or during processing, for example:
+
+```kt
+flow.onEach { value -> process(value) }
+.catch { e -> handleException(e) }
+.collect() // trigger collection of the flow
+```
+
+For instance :
+
+```kt
+ val fruitsList = listOf<String>("apple", "banana", "Mango", "Orange").asFlow()
+ 
+  fruitsList.onEach {
+        delay(2000)
+        println("value is $it and time is ${logWithTimestamp()}")
+    }.collect()
+
+```
+
+Output:
+
+```kt
+value is apple and time is 13:49:21
+value is banana and time is 13:49:23
+value is Mango and time is 13:49:25
+value is Orange and time is 13:49:27
+```
+
+As you can see we wait two second to print each item.
+
+##### collect {} :
+
+- **Description:** The `collect{}` block is an alternative syntax for
+  the `collect` function. It allows you to define a block of code to
+  handle each emitted value.
+- **Behavior:**
+    - Similar to `collect`, it collects values one by one.
+    - The block of code inside `collect{}` is executed for each emitted
+      value.
+    - It suspends the coroutine until a new value is emitted.
+
+Or we can say collect{} is short form of flow.onEach{}.catch{}.collect()
+
+For instance
+
+```kt
+val fruitsList = listOf<String>("apple", "banana", "Mango", "Orange").asFlow()
+ 
+  fruitsList.collect{
+        delay(2000)
+        println("value is $it and time is ${logWithTimestamp()}")
+    }
+
+```
+
+output :
+
+```kt
+value is apple and time is 13:56:11
+value is banana and time is 13:56:13
+value is Mango and time is 13:56:15
+value is Orange and time is 13:56:17
+```
+
+#### collectLatest{}:
+
+- **Description:** The `collectLatest` function is also a terminal
+  operator, but it has a different behavior compared to `collect`.
+- **Behavior:**
+    - It cancels the previous collection job when a new value is emitted
+      before the previous one is processed.
+    - This means that if a new value is emitted while the coroutine is
+      still processing a previous value, the processing of the previous
+      value is canceled, and the coroutine switches to handle the new
+      value.
+
+for instance :
+
+```kt
+    val fruitsList =
+        listOf<String>("apple", "banana", "Mango", "Orange").asFlow()  
+    
+    fruitsList.collectLatest{
+      println("collecting value is $it in time ${logWithTimestamp()}")
+ 
+        println("$it is collected in time ${logWithTimestamp()}")
+    } 
+    
+    
+    
+```
+
+output :
+
+```kt
+collecting value is apple in time 14:02:56
+apple is collected in time 14:02:56
+collecting value is banana in time 14:02:56
+banana is collected in time 14:02:56
+collecting value is Mango in time 14:02:56
+Mango is collected in time 14:02:56
+collecting value is Orange in time 14:02:56
+Orange is collected in time 14:02:56
+```
+
+But if I add delay we can see some instersting :
+
+example1 :
+
+```kt
+ fruitsList.collectLatest {
+        delay(10)
+        println("collecting value is $it in time ${logWithTimestamp()}")
+//        delay(10)
+        println("$it is collected in time ${logWithTimestamp()}")
+    }
+```
+
+output :
+
+```kt
+collecting value is Orange in time 14:04:41
+Orange is collected in time 14:04:41
+```
+
+Example2 :
+
+```kt
+    fruitsList.collectLatest {
+        println("collecting value is $it in time ${logWithTimestamp()}")
+        delay(1)
+        println("$it is collected in time ${logWithTimestamp()}")
+    }
+```
+
+output:
+
+```kt
+collecting value is apple in time 14:06:47
+apple is collected in time 14:06:47
+collecting value is banana in time 14:06:47
+collecting value is Mango in time 14:06:47
+collecting value is Orange in time 14:06:47
+Orange is collected in time 14:06:47
+```
+
+Example 3 :
+
+```kt
+    fruitsList.collectLatest {
+        println("collecting value is $it in time ${logWithTimestamp()}")
+        delay(1000)
+        println("$it is collected in time ${logWithTimestamp()}")
+    }
+```
+
+output :
+
+```kt
+collecting value is apple in time 14:07:44
+collecting value is banana in time 14:07:44
+collecting value is Mango in time 14:07:44
+collecting value is Orange in time 14:07:44
+Orange is collected in time 14:07:45
+```
 
 ###### 2- Collection:
 
@@ -159,13 +343,12 @@ exception so for prevent we need to use **lastOrNull()**
 5- launchIn() this function not suspend function like toList or toSet
 
 ```kt
-public fun <T> Flow<T>.launchIn(scope: CoroutineScope): Job =
-    scope.launch {
-        collect() // tail-call
-    }
+public fun <T> Flow<T>.launchIn(scope: CoroutineScope): Job = scope.launch {
+    collect() // tail-call
+}
 ```
 
-actually launchIn is a shortcut , instead Of using
+actually launchIn is a shortcut, instead Of Using
 
 ```kt
 scope.launch{

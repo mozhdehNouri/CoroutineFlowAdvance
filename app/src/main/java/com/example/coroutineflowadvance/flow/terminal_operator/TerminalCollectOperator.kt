@@ -45,10 +45,19 @@ private suspend fun main() {
     }
 
     fruitsList.collectLatest {
+        delay(10)
         println("collecting value is $it in time ${logWithTimestamp()}")
-//        delay(1000)
         println("$it is collected in time ${logWithTimestamp()}")
-
+    }
+    fruitsList.collectLatest {
+        println("collecting value is $it in time ${logWithTimestamp()}")
+        delay(1)
+        println("$it is collected in time ${logWithTimestamp()}")
+    }
+    fruitsList.collectLatest {
+        println("collecting value is $it in time ${logWithTimestamp()}")
+        delay(10)
+        println("$it is collected in time ${logWithTimestamp()}")
     }
 
 
