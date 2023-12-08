@@ -4,20 +4,31 @@ Intermidate operator unlike terminal operator perform instructions and
 produces a new flow.
 
 *Intermediate operators* on the flow such as map, filter, take, zip, etc
-are
-functions that are applied to the*upstream*flow or flows and return a
-*downstream*flow where further
-operators can be applied to. Intermediate operations do not execute any
-code in the flow and are not
-suspending functions themselves.
+are functions that are applied to the *upstream* flow or flows and return a
+*downstream*flow where further.
+
+Intermediate operations do not execute any code in the flow and are not suspending functions
+themselves.
 
 we can say with terminal operator we can apply our emision on flow and
-return new and transformed
-flow.
+return new and transformed flow.
 
-instead of terminal operator except launchIn and asLiveData() are suspend
-function
-the intermidate operator not suspend function.
+look at this example :
+
+```kt
+val flowOne = flowOf(1, 2, 3)
+flowOne.map {
+ it * 2       // new flow is 2,4,6
+}.filter {
+ it < 5     // new flow is 2, 4
+}
+```
+
+in above example map produce new flow and delivers to filter operator. filter condition no longer
+apply of 1,2,3 value it is apply on map output.
+
+Instead of terminal operator except launchIn and asLiveData() are suspend
+function the intermidate operator not suspend function.
 
 the intermidate operator aren't suspend function but most of them get a lambda which perform
 suspending operation.
@@ -65,15 +76,14 @@ in above example we got nothing.
 because flow visit first one and when see the first number is not mach with condition do not
 continue and get cancell.
 
-diffrent between takeWhile and filtert:
+diffrent between takeWhile and filter:
 
 as you can see in last example takewhile get cancell when the first item dosen't match with
-perdicate. but filter visiti all item
+perdicate. but filter visite all item
 
 drop :  we can pass a count. it opposit of take for more information checking code.
 
 dropWhile {} : ///it can apply all items instead of take but you can check it check all ot not
-
 transorm like map but has big diffrent :
 
 map return single value but transform retrun multiple value
