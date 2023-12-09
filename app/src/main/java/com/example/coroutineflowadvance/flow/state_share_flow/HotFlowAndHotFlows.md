@@ -51,8 +51,6 @@ override onStart (){
 override onStop (){
   job.cancel()
 }
-
-
 ```
 
 In above code, we need a lot of boilerplate.
@@ -146,7 +144,6 @@ ColdFlow:
   For instance:
 
   ```kt
-  
   val flowOne =flow{
       println("emit 1")
       emit(1)
@@ -154,7 +151,7 @@ ColdFlow:
       println("emit 2")
       emit(2)
       delay(1000)
-      
+  
     println("emit 3") 
     emit(3)
   }
@@ -233,9 +230,30 @@ emit 3
 startItem emit 3 collect 2
 emit 3
 startItem emit 3 collect 1
-
 ```
 
 code in the flow builder run for every collector.
 every collector gets its own stream of values and each collector is
 independ of another collector.
+
+HotFlows:
+
+Unlike ColdFlows , HotFlows start emiting value without calling any
+collector. hot flows can get lost if no current active collector.
+
+in hot flows we can lost data.
+
+- Are active regardless of whether there are collectors.
+
+- Stay active even when there is no more collector.
+
+- Emissions are shared between all collectors.
+
+**Two important reasons we use hotFlows is disability coldFlow or regular
+flow to do this two things.**
+
+**1 - Coniguration changes in cold flow get canceled during configuration
+change and restart**
+
+**2 - Multiple collectors create multiple flows.** or we can say
+independent of each other.
