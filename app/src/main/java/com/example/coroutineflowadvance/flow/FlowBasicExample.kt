@@ -1,7 +1,10 @@
 package com.example.coroutineflowadvance.flow
 
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 fun main() {
@@ -51,4 +54,35 @@ fun addNumberWithFlow(listNumber: List<Int>): Flow<Int> = flow {
         newValue += i
         emit(newValue)
     }
+}
+
+suspend fun flow() = coroutineScope {
+    val flowOne = flow {
+        println("emit 1")
+        emit(1)
+        delay(1000)
+
+        println("emit 2")
+        emit(2)
+        delay(1000)
+
+        println("emit 3")
+        emit(3)
+        delay(100)
+    }
+
+    // every collect function is individual
+    // every time call collect function  flow{} run again and we have new and independently flow
+    launch {
+        flowOne.collect {
+            println("startItem emit $it collect 1")
+        }
+    }
+
+    launch {
+        flowOne.collect {
+            println("startItem emit $it collect 2")
+        }
+    }
+
 }
