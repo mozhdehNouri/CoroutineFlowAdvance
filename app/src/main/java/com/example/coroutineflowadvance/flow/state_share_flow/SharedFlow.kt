@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.coroutineflowadvance.ui.logWithTimestamp
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
@@ -12,6 +13,8 @@ import kotlinx.coroutines.flow.shareIn
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun main() {
+
+    val shared = MutableSharedFlow<>()
     val flowOne = flow<Int> {
         emit(1)
         emit(2)

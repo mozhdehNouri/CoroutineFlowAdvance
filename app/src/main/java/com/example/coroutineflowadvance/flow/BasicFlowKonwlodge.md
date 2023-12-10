@@ -1,4 +1,4 @@
-### What is the flow ? asynchronous data stream
+### What is the flow ? asynchronous data stream while cold Flows are intended to be consumed by only one observer.
 
 Flow is a new Kotlin asynchronous stream library that is built on top of Kotlin coroutines.
 
