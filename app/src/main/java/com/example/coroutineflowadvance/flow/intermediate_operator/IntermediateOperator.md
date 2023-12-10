@@ -1,13 +1,22 @@
-Intermidate operator:
+##### Intermidate operator:
+
+Intermediate operators are those that transform the flow and return a new
+flow. They are essentially extension functions on the`Flow`type, and many
+of these operators internally use the`emit`function to emit the
+transformed items. For example,`map`,`filter`, and`onEach`are such
+operators that apply some transformation or action and emit the results
+downstream to the next operator or the terminal operator.
 
 Intermidate operator unlike terminal operator perform instructions and
 produces a new flow.
 
 *Intermediate operators* on the flow such as map, filter, take, zip, etc
-are functions that are applied to the *upstream* flow or flows and return a
+are functions that are applied to the *upstream* flow or flows and return
+a
 *downstream*flow where further.
 
-Intermediate operations do not execute any code in the flow and are not suspending functions
+Intermediate operations do not execute any code in the flow and are not
+suspending functions
 themselves.
 
 we can say with terminal operator we can apply our emision on flow and

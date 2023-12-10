@@ -1,5 +1,15 @@
 #### Terminal operator
 
+Terminal operators are the ones that start the collection of the flow and
+do not return a flow, but instead return some other type, such as a single
+value, a list, or nothing at all (in the case of`collect`). These
+operators include`toList`,`toSet`,`first`, and the`collect`family of
+functions like`collect`,`collectLatest`, and others. Terminal operators do
+not use the`emit`function directly because they are the endpoint of the
+flow processing. Instead, they handle the values that are emitted by the
+upstream flow, often using some form of the`collect`method internally to
+process those values.
+
 note: all operators we use in this article are terminal operators. but I
 divide it into different categories for better understanding.
 
@@ -123,9 +133,9 @@ the previous value get cancel and new value get emit.
   starts the collection of values from the Flow. It is a suspending
   function, meaning it can only be called from within a coroutine.
 - **Behavior:**
-    - The `collect` function collects all emitted values from the Flow
-      sequentially, one by one.
-    - It suspends the coroutine until a new value is emitted.
+  - The `collect` function collects all emitted values from the Flow
+    sequentially, one by one.
+  - It suspends the coroutine until a new value is emitted.
 
 This operator is usually used with **onEach**, **onCompletion **and *
 *catch** operators to process all emitted values and handle an exception
@@ -141,12 +151,11 @@ For instance :
 
 ```kt
  val fruitsList = listOf<String>("apple", "banana", "Mango", "Orange").asFlow()
- 
+
   fruitsList.onEach {
         delay(2000)
         println("value is $it and time is ${logWithTimestamp()}")
     }.collect()
-
 ```
 
 Output:
@@ -166,10 +175,10 @@ As you can see we wait two second to print each item.
   the `collect` function. It allows you to define a block of code to
   handle each emitted value.
 - **Behavior:**
-    - Similar to `collect`, it collects values one by one.
-    - The block of code inside `collect{}` is executed for each emitted
-      value.
-    - It suspends the coroutine until a new value is emitted.
+  - Similar to `collect`, it collects values one by one.
+  - The block of code inside `collect{}` is executed for each emitted
+    value.
+  - It suspends the coroutine until a new value is emitted.
 
 Or we can say collect{} is short form of flow.onEach{}.catch{}.collect()
 
@@ -177,12 +186,11 @@ For instance
 
 ```kt
 val fruitsList = listOf<String>("apple", "banana", "Mango", "Orange").asFlow()
- 
-  fruitsList.collect{
+
+fruitsList.collect{
         delay(2000)
         println("value is $it and time is ${logWithTimestamp()}")
     }
-
 ```
 
 output :
@@ -199,27 +207,24 @@ value is Orange and time is 13:56:17
 - **Description:** The `collectLatest` function is also a terminal
   operator, but it has a different behavior compared to `collect`.
 - **Behavior:**
-    - It cancels the previous collection job when a new value is emitted
-      before the previous one is processed.
-    - This means that if a new value is emitted while the coroutine is
-      still processing a previous value, the processing of the previous
-      value is canceled, and the coroutine switches to handle the new
-      value.
+  - It cancels the previous collection job when a new value is emitted
+    before the previous one is processed.
+  - This means that if a new value is emitted while the coroutine is
+    still processing a previous value, the processing of the previous
+    value is canceled, and the coroutine switches to handle the new
+    value.
 
 for instance :
 
 ```kt
     val fruitsList =
-        listOf<String>("apple", "banana", "Mango", "Orange").asFlow()  
-    
-    fruitsList.collectLatest{
+        listOf<String>("apple", "banana", "Mango", "Orange").asFlow()
+
+fruitsList.collectLatest{
       println("collecting value is $it in time ${logWithTimestamp()}")
- 
-        println("$it is collected in time ${logWithTimestamp()}")
+
+  println("$it is collected in time ${logWithTimestamp()}")
     } 
-    
-    
-    
 ```
 
 output :
