@@ -101,10 +101,79 @@ transform{}
 4- diffrenet between map{}, transform{}, onEach{} operator and when use
 which one.
 
+`onEach`,`map`, and`transform`are operators in Kotlin Flow that apply
+intermediate processing to the elements emitted by a flow. Here is a brief
+explanation of each and how they differ:
 
+### `onEach`
 
+- The`onEach`operator is used for performing actions on each element
+  emitted by the upstream flow without transforming the element itself.
+  The action performed in`onEach`is side-effectual, meaning it’s usually
+  used for logging, updating UI, etc. It does not change the element.
+- It returns a flow with the same elements as the original. Therefore, the
+  downstream flow receives the same data as the upstream.
 
+```
+flowOf(1, 2, 3)
+    .onEach { value ->
+        println("Value is $value") // Performs action without changing the value
+    }
+    .collect { value ->
+        // Use value which remains unchanged
+    }
+```
 
+### `map`
 
+- The`map`operator applies a transform to each element and emits the
+  result. The transformation function takes the original element and
+  returns a new element, so the types of the input and output flows can be
+  different.
+- The resulting flow emits the transformed elements, which may have a
+  different type than the emitted by the upstream flow.
 
+```
+flowOf(1, 2, 3)
+    .map { value ->
+        value * 2 // Transforms the value
+    }
+    .collect { doubledValue ->
+        // Collects the changed values (doubled in this case)
+    }
+```
 
+### `transform`
+
+- The`transform`operator is more powerful and general than`map`. It allows
+  you to perform complex transformations, including emitting multiple
+  items for a single input value.
+- It can be used to implement any custom logic including the logic
+  equivalent to`onEach`and`map`, plus much more. You can use`emit`multiple
+  times within the`transform`block.
+
+```
+flowOf(1, 2, 3)
+    .transform { value ->
+        emit("Number $value") // Can emit multiple times for each value
+        if (value % 2 == 0) {
+            emit("Even $value")
+        }
+    }
+    .collect { transformedValue ->
+        // Collects all the values emitted in the transform block
+    }
+```
+
+To summarize:
+
+- **`onEach`**: Perform actions on each element without transformation,
+  e.g., for side-effects.
+- **`map`**: Transform each emitted element to another value or type,
+  emitting exactly one output for each input.
+- **`transform`**: Apply a complex transformation, potentially emitting
+  multiple elements for each input.
+
+These operators provide flexibility in managing the emitted values of a
+flow, whether it’s for applying side-effects, transforming values, or
+applying more complex logic that might not fit into the`map`pattern.
