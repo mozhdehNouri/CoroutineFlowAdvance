@@ -12,8 +12,7 @@ produces a new flow.
 
 *Intermediate operators* on the flow such as map, filter, take, zip, etc
 are functions that are applied to the *upstream* flow or flows and return
-a
-*downstream*flow where further.
+a*downstream*flow where further.
 
 Intermediate operations do not execute any code in the flow and are not
 suspending functions
@@ -93,9 +92,7 @@ perdicate. but filter visite all item
 drop :  we can pass a count. it opposit of take for more information checking code.
 
 dropWhile {} : ///it can apply all items instead of take but you can check it check all ot not
-transorm like map but has big diffrent :
-
-map return single value but transform retrun multiple value
+transorm like map but has big diffrent : map return single value but transform retrun multiple value
 for instance:
 
 ```kt
