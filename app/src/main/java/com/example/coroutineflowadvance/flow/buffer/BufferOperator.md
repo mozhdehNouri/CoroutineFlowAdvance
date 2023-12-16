@@ -117,3 +117,88 @@ Now, translating that back to Kotlin Flow terms:
 - **“Buffer”**: A temporary storage for data in between the emitter and collector.
 - **“onBufferOverflow”**: A setting you can change to decide what happens when the buffer gets too
   full.
+
+##### second definition :
+
+buffer() operator is concurrent flows. flow works sequentially but when we apply buffer() operator
+emit() function and collect() function work on independent coroutine and use channel to communicate
+each other.
+
+note: we use channel for communicate coroutine to gether.
+
+for instance:
+
+```kt
+fun main() = coroutineScope {
+    val flowOne = flow {
+        repeat(5) {
+            println("start emitting")
+            delay(100)
+            println("data is ready")
+            emit(it)
+        }
+    }
+
+    flow.collect {
+        println("start to collect $it")
+        delay(300)
+        println("end collect $it")
+    }
+}
+
+
+```
+
+without using buffer this operation works sequentiallybut if we apply .buffer() operator emit works
+independtly and start to emit item to collector .
+after 300 collector get second item immidatly and don't stop 100 for emit item.
+
+```kt
+```kt
+fun main() = coroutineScope {
+    val flowOne = flow {
+        repeat(5) {
+            println("start emitting")
+            delay(100)
+            println("data is ready")
+            emit(it)
+        }
+    }
+
+    flow.buffer().collect {
+        println("start to collect $it")
+        delay(300)
+        println("end collect $it")
+    }
+}
+```
+
+```
+
+never forget buffer works concurrency and emit function perfom another coroutine and collect perform another coroutine and finally they comminucate each other with channel internally.
+
+buffer use channel internally for comminucate emit function and collect function.because when we use buffer() wmit function and collect function run diffrent  coroutine.
+
+the **buffer()** operator has 2 parameter and they have defult value but it is improtant to know about each one.
+
+```kt
+buffer(capacity: Int = BUFFERED, onBufferOverflow: BufferOverflow = BufferOverflow.SUSPEND)
+```
+
+Firs paramater is capacity : consider capacity like a palte which can keep a particular apple or
+cooke.
+
+the default paramater is BUFFERED its mean we can save 64 item untils collector get free from
+perviouse item .
+
+now what happend if our buffer get full ? now second paramter comes.
+
+the default value for onBufferOverflow is SUSPEND it means when buffer get full emit function get
+suspended until get free.
+
+we have diffrent paramter for onBufferOverflow like
+
+DROP_OLDEST : in this situation when buffer get full it drops oldest value and put new item in
+buffer.
+
+DROP_LATEST: in this situation when buffer get full it drops new value which emitted.

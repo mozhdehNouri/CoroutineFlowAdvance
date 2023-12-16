@@ -19,8 +19,6 @@ if the processing part (your friend reading texts) is slow, the`conflate()`opera
 skips over all the intermediate values (earlier game score updates) and processes only the most
 recent one (the latest score).
 
-actully we can say conflate is equal with buffer with diffrent capacity
-
 conflate:
 
 ```kt

@@ -1,6 +1,5 @@
 package com.example.coroutineflowadvance.flow.buffer
 
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
@@ -20,7 +19,7 @@ fun main() = runBlocking<Unit> {
 //sampleStart
     val time = measureTimeMillis {
         simple()
-            .buffer(capacity = Channel.CONFLATED) // buffer emissions, don't wait
+            .buffer() // buffer emissions, don't wait
             .collect { value ->
                 delay(300) // pretend we are processing it for 300 ms
                 println(value)
